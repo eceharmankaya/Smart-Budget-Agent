@@ -1,13 +1,21 @@
 import os
+import sys
+import re
+import math
 import pandas as pd
+import numpy as np
 
 # Try to import matplotlib for plots. If not available, continue without plotting.
 # Catch ImportError specifically so other unexpected errors still raise.
 try:
 	import matplotlib.pyplot as plt
 	_CAN_PLOT = True
-except ImportError:
+	_MATPLOTLIB_VERSION = getattr(plt, "__version__", None)
+	_MATPLOTLIB_IMPORT_ERROR = None
+except ImportError as e:
 	_CAN_PLOT = False
+	_MATPLOTLIB_VERSION = None
+	_MATPLOTLIB_IMPORT_ERROR = str(e)
 
 
 def main():
@@ -20,8 +28,29 @@ def main():
 
 	path = "data/expenses.csv"
 
+	# Recurring detection parameters (tweak if needed)
+	MIN_MONTHS_RATIO = 0.66  # fraction of months a description must appear in to be considered recurring
+	CV_THRESHOLD = 0.25      # allowable coefficient-of-variation (std/mean)
+
+	def normalize_description(s: str) -> str:
+		# basic normalization: lowercase, strip, collapse whitespace, remove punctuation
+		s = str(s).lower()
+		s = re.sub(r"[^0-9a-z\s]", "", s)
+		s = re.sub(r"\s+", " ", s).strip()
+		return s
+
+	# Diagnostic: show which Python interpreter is running and matplotlib status
+	print("Python executable:", sys.executable)
+	if _CAN_PLOT:
+		print("matplotlib available, version:", _MATPLOTLIB_VERSION)
+	else:
+		print(f"matplotlib not available for {sys.executable}. Install with: {sys.executable} -m pip install matplotlib")
+
 	# Read CSV into a DataFrame
 	df = pd.read_csv(path)
+
+	# Add normalized description to help group noisy descriptions
+	df["desc_norm"] = df["description"].apply(normalize_description)
 
 	# Convert date column to datetime type (important for monthly grouping)
 	df["date"] = pd.to_datetime(df["date"])  # yeni terim: datetime -> tarih zamanı
@@ -110,6 +139,50 @@ def main():
 	# Save top5 for review
 	top5.to_csv("data/top5_transactions.csv", index=False)
 	print("Top 5 transactions saved to data/top5_transactions.csv")
+
+	# Detect recurring payments by normalized description across months
+	n_months = df["year_month"].nunique()
+	min_months = max(1, math.ceil(n_months * MIN_MONTHS_RATIO))
+
+	# stats per normalized description
+	dn_month_counts = df.groupby("desc_norm")["year_month"].nunique()
+	dn_stats = df.groupby("desc_norm")["amount"].agg(["mean", "std"]).rename(columns={"mean": "avg_amount", "std": "std_amount"})
+
+	dn_summary = dn_month_counts.rename("months_count").to_frame().join(dn_stats)
+	dn_summary["cv"] = dn_summary["std_amount"] / dn_summary["avg_amount"].replace(0, np.nan)
+
+	# Recurring if appears in at least min_months and coefficient of variation small
+	dn_summary["is_recurring"] = (dn_summary["months_count"] >= min_months) & (dn_summary["cv"].fillna(0) < CV_THRESHOLD)
+
+	# Map normalized description -> representative original description and category
+	rep_desc = df.groupby("desc_norm")["description"].agg(lambda x: x.mode().iat[0])
+	rep_cat = df.groupby("desc_norm")["category"].agg(lambda x: x.mode().iat[0])
+
+	recurring_df = dn_summary.reset_index().merge(rep_desc.reset_index(), on="desc_norm").merge(rep_cat.reset_index(), on="desc_norm")
+
+	# reorder/rename columns for clarity
+	recurring_df = recurring_df[["description", "desc_norm", "months_count", "avg_amount", "std_amount", "cv", "is_recurring", "category"]]
+
+	# Save recurring descriptions
+	recurring_path = "data/recurring.csv"
+	recurring_df.to_csv(recurring_path, index=False)
+	print(f"Saved recurring descriptions to {recurring_path}")
+
+	# Prepare optimizer input per category
+	# average monthly spend per category
+	cat_month = df.groupby(["category", "year_month"])["amount"].sum().reset_index()
+	cat_month_mean = cat_month.groupby("category")["amount"].mean().rename("avg_monthly")
+
+	# fixed amount per category = sum of recurring avg_amounts (assume recurring avg is monthly)
+	fixed_per_cat = recurring_df[recurring_df["is_recurring"]].groupby("category")["avg_amount"].sum().rename("fixed_amount")
+
+	optimizer_df = pd.concat([cat_month_mean, fixed_per_cat], axis=1).fillna(0)
+	optimizer_df["avg_variable_amount"] = (optimizer_df["avg_monthly"] - optimizer_df["fixed_amount"]).clip(lower=0)
+	optimizer_df["is_recurring_category"] = optimizer_df["fixed_amount"] > 0
+
+	optimizer_path = "data/optimizer_input.csv"
+	optimizer_df.reset_index().to_csv(optimizer_path, index=False)
+	print(f"Saved optimizer input to {optimizer_path}")
 
 	# Plot top categories (top 10) if possible
 	if _CAN_PLOT:
