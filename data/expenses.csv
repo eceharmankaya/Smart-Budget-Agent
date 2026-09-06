@@ -1,0 +1,190 @@
+category,description,amount,date
+Housing,Rent,12000,2026-09-20
+Utilities,Mobile Phone,1642,2026-09-24
+Utilities,Internet,1201,2026-09-09
+Utilities,Water,1790,2026-09-04
+Utilities,Internet,900,2026-09-08
+Groceries,Local Market,1117,2026-09-16
+Groceries,Grocery Store,790,2026-09-09
+Groceries,Supermarket,1248,2026-09-14
+Groceries,Local Market,953,2026-09-28
+Groceries,Local Market,1093,2026-09-13
+Groceries,Grocery Store,377,2026-09-11
+Groceries,Grocery Store,363,2026-09-02
+Groceries,Supermarket,971,2026-09-12
+Restaurants,Brunch,1311,2026-09-05
+Restaurants,Brunch,907,2026-09-01
+Restaurants,Fast Food,437,2026-09-14
+Restaurants,Restaurant,1143,2026-09-17
+Restaurants,Dinner Out,374,2026-09-19
+Restaurants,Restaurant,1053,2026-09-16
+Coffee,EspressoLab,293,2026-09-20
+Coffee,Starbucks,363,2026-09-03
+Coffee,EspressoLab,200,2026-09-29
+Coffee,EspressoLab,210,2026-09-29
+Coffee,Starbucks,206,2026-09-25
+Coffee,Starbucks,357,2026-09-29
+Coffee,Coffee Shop,367,2026-09-15
+Coffee,Starbucks,393,2026-09-20
+Coffee,Coffee Shop,373,2026-09-26
+Coffee,EspressoLab,235,2026-09-10
+Delivery,Food Delivery,834,2026-09-01
+Delivery,Grocery Delivery,901,2026-09-07
+Delivery,Grocery Delivery,509,2026-09-14
+Delivery,Grocery Delivery,659,2026-09-25
+Transportation,Bus,388,2026-09-16
+Transportation,Metro,487,2026-09-03
+Transportation,Metro,274,2026-09-07
+Transportation,Fuel,192,2026-09-27
+Transportation,Taxi,215,2026-09-10
+Transportation,Bus,772,2026-09-01
+Transportation,Taxi,412,2026-09-10
+Transportation,Bus,518,2026-09-06
+Transportation,Taxi,150,2026-09-12
+Transportation,Metro,894,2026-09-22
+Transportation,Fuel,635,2026-09-24
+Transportation,Metro,783,2026-09-19
+Beauty,Beauty Treatment,989,2026-09-05
+Gym,Gym Membership,1500,2026-09-15
+Health Insurance,Health Insurance Payment,1500,2026-09-12
+AI Tools,AI Subscription,1500,2026-09-11
+Shopping,Online Shopping,1610,2026-09-07
+Shopping,Online Shopping,1720,2026-09-19
+Shopping,Online Shopping,2551,2026-09-22
+Shopping,Clothing,2089,2026-09-25
+Entertainment,Night Out,476,2026-09-21
+Entertainment,Event,1494,2026-09-02
+Entertainment,Concert,1024,2026-09-17
+Travel,Travel Expense,3254,2026-09-03
+Travel,Travel Expense,2822,2026-09-18
+Other,Miscellaneous Expense,948,2026-09-24
+Other,Miscellaneous Expense,1125,2026-09-26
+Subscriptions,Netflix,250,2026-09-22
+Subscriptions,Spotify,100,2026-09-01
+Subscriptions,Cloud Storage,150,2026-09-27
+Housing,Rent,12000,2026-10-17
+Utilities,Electricity,1027,2026-10-04
+Utilities,Water,1277,2026-10-24
+Utilities,Internet,821,2026-10-28
+Utilities,Mobile Phone,920,2026-10-22
+Groceries,Supermarket,494,2026-10-05
+Groceries,Grocery Store,1361,2026-10-04
+Groceries,Supermarket,506,2026-10-11
+Groceries,Grocery Store,602,2026-10-11
+Groceries,Supermarket,714,2026-10-16
+Groceries,Supermarket,564,2026-10-22
+Groceries,Grocery Store,1091,2026-10-13
+Groceries,Supermarket,327,2026-10-27
+Restaurants,Brunch,393,2026-10-23
+Restaurants,Brunch,1696,2026-10-04
+Restaurants,Fast Food,1471,2026-10-01
+Restaurants,Fast Food,983,2026-10-16
+Restaurants,Dinner Out,632,2026-10-06
+Restaurants,Dinner Out,1658,2026-10-04
+Coffee,EspressoLab,325,2026-10-04
+Coffee,EspressoLab,352,2026-10-14
+Coffee,EspressoLab,258,2026-10-26
+Coffee,EspressoLab,183,2026-10-25
+Coffee,EspressoLab,216,2026-10-15
+Coffee,EspressoLab,339,2026-10-02
+Coffee,Coffee Shop,139,2026-10-30
+Coffee,Starbucks,152,2026-10-01
+Coffee,EspressoLab,398,2026-10-23
+Coffee,Coffee Shop,284,2026-10-22
+Delivery,Grocery Delivery,310,2026-10-24
+Delivery,Food Delivery,483,2026-10-01
+Delivery,Grocery Delivery,797,2026-10-26
+Delivery,Food Delivery,357,2026-10-02
+Transportation,Metro,162,2026-10-17
+Transportation,Bus,226,2026-10-07
+Transportation,Taxi,401,2026-10-29
+Transportation,Fuel,152,2026-10-28
+Transportation,Fuel,605,2026-10-22
+Transportation,Fuel,241,2026-10-09
+Transportation,Bus,263,2026-10-21
+Transportation,Metro,116,2026-10-27
+Transportation,Bus,463,2026-10-18
+Transportation,Bus,302,2026-10-18
+Transportation,Metro,640,2026-10-13
+Transportation,Metro,677,2026-10-01
+Beauty,Skincare,802,2026-10-03
+Gym,Gym Membership,1500,2026-10-20
+Health Insurance,Health Insurance Payment,1500,2026-10-21
+AI Tools,AI Subscription,1500,2026-10-29
+Shopping,Clothing,679,2026-10-05
+Shopping,Cosmetics,631,2026-10-08
+Shopping,Electronics,1259,2026-10-23
+Shopping,Cosmetics,942,2026-10-14
+Entertainment,Event,1031,2026-10-06
+Entertainment,Cinema,681,2026-10-13
+Entertainment,Event,938,2026-10-27
+Travel,Flight,1521,2026-10-21
+Travel,Train,3750,2026-10-05
+Other,Miscellaneous Expense,743,2026-10-11
+Other,Miscellaneous Expense,392,2026-10-20
+Subscriptions,Netflix,250,2026-10-29
+Subscriptions,Spotify,100,2026-10-07
+Subscriptions,Cloud Storage,150,2026-10-05
+Housing,Rent,12000,2026-11-06
+Utilities,Electricity,1209,2026-11-09
+Utilities,Mobile Phone,1531,2026-11-14
+Utilities,Internet,695,2026-11-08
+Utilities,Mobile Phone,591,2026-11-06
+Groceries,Local Market,840,2026-11-16
+Groceries,Local Market,645,2026-11-08
+Groceries,Grocery Store,968,2026-11-01
+Groceries,Local Market,802,2026-11-19
+Groceries,Supermarket,1356,2026-11-02
+Groceries,Supermarket,1085,2026-11-26
+Groceries,Grocery Store,919,2026-11-29
+Groceries,Supermarket,854,2026-11-17
+Restaurants,Restaurant,820,2026-11-22
+Restaurants,Brunch,1100,2026-11-15
+Restaurants,Brunch,1518,2026-11-05
+Restaurants,Dinner Out,1132,2026-11-29
+Restaurants,Brunch,1281,2026-11-09
+Restaurants,Restaurant,653,2026-11-04
+Coffee,EspressoLab,233,2026-11-10
+Coffee,EspressoLab,311,2026-11-16
+Coffee,EspressoLab,375,2026-11-21
+Coffee,Starbucks,228,2026-11-24
+Coffee,Coffee Shop,229,2026-11-20
+Coffee,Starbucks,255,2026-11-02
+Coffee,Starbucks,174,2026-11-12
+Coffee,EspressoLab,337,2026-11-10
+Coffee,EspressoLab,270,2026-11-08
+Coffee,Coffee Shop,253,2026-11-11
+Delivery,Grocery Delivery,269,2026-11-16
+Delivery,Food Delivery,496,2026-11-25
+Delivery,Grocery Delivery,321,2026-11-12
+Delivery,Food Delivery,928,2026-11-13
+Transportation,Bus,662,2026-11-29
+Transportation,Bus,893,2026-11-10
+Transportation,Fuel,725,2026-11-14
+Transportation,Metro,292,2026-11-03
+Transportation,Metro,362,2026-11-02
+Transportation,Metro,138,2026-11-26
+Transportation,Fuel,239,2026-11-10
+Transportation,Bus,658,2026-11-30
+Transportation,Fuel,111,2026-11-01
+Transportation,Fuel,261,2026-11-24
+Transportation,Fuel,441,2026-11-16
+Transportation,Fuel,164,2026-11-18
+Beauty,Nail Salon,1585,2026-11-03
+Gym,Gym Membership,1500,2026-11-26
+Health Insurance,Health Insurance Payment,1500,2026-11-26
+AI Tools,AI Subscription,1500,2026-11-14
+Shopping,Cosmetics,1875,2026-11-08
+Shopping,Electronics,994,2026-11-07
+Shopping,Cosmetics,2401,2026-11-04
+Shopping,Online Shopping,2393,2026-11-02
+Entertainment,Night Out,817,2026-11-18
+Entertainment,Event,1124,2026-11-06
+Entertainment,Concert,1153,2026-11-20
+Travel,Travel Expense,2832,2026-11-13
+Travel,Flight,4322,2026-11-06
+Other,Miscellaneous Expense,1121,2026-11-19
+Other,Miscellaneous Expense,876,2026-11-03
+Subscriptions,Netflix,250,2026-11-14
+Subscriptions,Spotify,100,2026-11-11
+Subscriptions,Cloud Storage,150,2026-11-15
