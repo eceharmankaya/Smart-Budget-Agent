@@ -19,16 +19,39 @@ def main():
     df = pd.read_csv("data/optimizer_input.csv")
     df = df.set_index("category")
 
-    # Budget to respect (monthly). Default: current avg total minus savings_pct * avg_total
-    total_avg = float(df["avg_monthly"].sum())
-
     # CLI: support either explicit budget or savings percentage (defaults to 10%)
     import argparse
     p = argparse.ArgumentParser(description="Optimizer: minimize deviation from current averages while meeting savings target")
     p.add_argument("--budget", type=float, default=None, help="Monthly budget to respect (overrides --savings-pct)")
     p.add_argument("--savings-pct", type=float, default=0.10, help="Target savings as fraction of current avg total (default 0.10)")
     p.add_argument("--protected-categories", type=str, default="", help="Comma-separated categories to keep at avg_monthly (e.g., 'Beauty,Coffee')")
+    p.add_argument(
+        "--category-amount",
+        action="append",
+        nargs=2,
+        metavar=("CATEGORY", "AMOUNT"),
+        default=[],
+        help="Override a category's current monthly amount (may be supplied more than once)",
+    )
     args = p.parse_args()
+
+    if not 0 <= args.savings_pct < 1:
+        p.error("--savings-pct must be between 0 (inclusive) and 1 (exclusive)")
+
+    for category, raw_amount in args.category_amount:
+        if category not in df.index:
+            p.error(f"Unknown category for --category-amount: {category}")
+        try:
+            amount = float(raw_amount)
+        except ValueError:
+            p.error(f"Invalid amount for {category}: {raw_amount}")
+        if amount < 0:
+            p.error(f"Amount for {category} cannot be negative")
+        df.loc[category, "avg_monthly"] = amount
+
+    # Budget to respect (monthly). Default: current average total minus savings_pct.
+    # This must be calculated after any profile-based category overrides.
+    total_avg = float(df["avg_monthly"].sum())
 
     # Parse protected categories: these keep their avg_monthly as fixed_amount
     protected = set()
@@ -104,7 +127,21 @@ def main():
     prob += pl.lpSum([spend_vars[c] for c in spend_vars]) <= budget, "BudgetConstraint"
 
     # Solve
-    prob.solve()
+    status = prob.solve(pl.PULP_CBC_CMD(msg=False))
+    if pl.LpStatus[status] != "Optimal":
+        minimum_spend = sum(
+            max(
+                float(df.loc[cat, "avg_monthly"]) if cat in protected else float(df.loc[cat, "fixed_amount"]),
+                float(df.loc[cat, "avg_monthly"]) * category_bounds.get(cat, (0.0, 2.0))[0],
+            )
+            for cat in df.index
+        )
+        print(
+            f"Optimization could not meet the requested budget of {budget:,.0f} TL. "
+            f"The minimum feasible budget is {minimum_spend:,.0f} TL.",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
 
     # Collect results
     results = []

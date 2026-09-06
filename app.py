@@ -2,9 +2,13 @@ import streamlit as st
 import pandas as pd
 import subprocess
 import os
+import sys
 from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
+
+PROJECT_DIR = Path(__file__).resolve().parent
+DATA_DIR = PROJECT_DIR / "data"
 
 # Page config
 st.set_page_config(
@@ -108,14 +112,16 @@ if "run_optimization" in st.session_state and st.session_state.run_optimization:
             # Build optimizer command
             protected_str = ",".join(protected_categories) if protected_categories else ""
             cmd = [
-                "python", "optimizer.py",
+                sys.executable, "optimizer.py",
                 "--savings-pct", str(savings_pct / 100),
+                "--category-amount", "Housing", str(housing),
+                "--category-amount", "Beauty", str(beauty),
             ]
             if protected_str:
                 cmd.extend(["--protected-categories", protected_str])
             
             # Run optimizer
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd="/Users/eceharmankaya/Desktop/Smart Budget Agent")
+            result = subprocess.run(cmd, capture_output=True, text=True, cwd=PROJECT_DIR)
             
             if result.returncode == 0:
                 st.session_state.optimization_done = True
@@ -138,9 +144,14 @@ if "run_optimization" in st.session_state and st.session_state.run_optimization:
 if "optimization_done" in st.session_state and st.session_state.optimization_done:
     try:
         # Load data
-        input_df = pd.read_csv("/Users/eceharmankaya/Desktop/Smart Budget Agent/data/optimizer_input.csv")
-        solution_df = pd.read_csv("/Users/eceharmankaya/Desktop/Smart Budget Agent/data/optimizer_solution.csv")
-        recurring_df = pd.read_csv("/Users/eceharmankaya/Desktop/Smart Budget Agent/data/recurring.csv")
+        input_df = pd.read_csv(DATA_DIR / "optimizer_input.csv")
+        solution_df = pd.read_csv(DATA_DIR / "optimizer_solution.csv")
+        recurring_df = pd.read_csv(DATA_DIR / "recurring.csv")
+
+        # Keep the dashboard's baseline aligned with the profile values passed
+        # to the optimizer; the source CSV remains the unmodified history.
+        input_df.loc[input_df["category"] == "Housing", "avg_monthly"] = housing
+        input_df.loc[input_df["category"] == "Beauty", "avg_monthly"] = beauty
         
         # Calculate metrics
         current_total = input_df["avg_monthly"].sum()
@@ -247,7 +258,7 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
             st.markdown("---")
             st.subheader("🔥 Top Savings Opportunities")
             
-            top_reductions = comparison.nlargest(5, "Change")[["category", "avg_monthly_current", "recommended_spend", "Change"]].copy()
+            top_reductions = comparison.nsmallest(5, "Change")[["category", "avg_monthly_current", "recommended_spend", "Change"]].copy()
             top_reductions = top_reductions[top_reductions["Change"] < 0]  # Only cuts
             top_reductions["Change"] = -top_reductions["Change"]
             top_reductions.columns = ["Category", "Current (₺)", "Recommended (₺)", "Potential Savings (₺)"]
@@ -281,7 +292,7 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
                 
                 # Top savings categories
                 st.markdown("**Top 5 Savings Opportunities:**")
-                top_5 = comparison.nlargest(5, "Change")[["category", "Change"]].copy()
+                top_5 = comparison.nsmallest(5, "Change")[["category", "Change"]].copy()
                 top_5 = top_5[top_5["Change"] < 0]  # Only cuts
                 top_5["Change"] = -top_5["Change"]
                 
@@ -317,16 +328,17 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
             st.markdown("---")
             st.subheader("🔄 Recurring Expenses Analysis")
             
-            if len(recurring_df) > 0:
-                st.markdown(f"**{len(recurring_df)} recurring expenses identified** (appearing in ≥2 months)")
-                
-                recurring_summary = recurring_df.groupby("category")["amount"].sum().sort_values(ascending=False)
+            recurring_expenses = recurring_df[recurring_df["is_recurring"]].copy()
+            if len(recurring_expenses) > 0:
+                st.markdown(f"**{len(recurring_expenses)} recurring expenses identified** (appearing in ≥2 months)")
+
+                recurring_summary = recurring_expenses.groupby("category")["avg_amount"].sum().sort_values(ascending=False)
                 st.dataframe(
                     recurring_summary.rename("Total (₺)"),
                     use_container_width=True
                 )
                 
-                total_recurring = recurring_df["amount"].sum()
+                total_recurring = recurring_expenses["avg_amount"].sum()
                 st.markdown(f"""
                 **Total Recurring: ₺{total_recurring:,.0f}/month**
                 
@@ -335,6 +347,8 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
                 - Negotiate utility rates
                 - Consider alternatives for fixed services
                 """)
+            else:
+                st.info("No recurring expenses were identified in the available history.")
         
         # TAB 4: 90-DAY PLAN
         with tab4:
