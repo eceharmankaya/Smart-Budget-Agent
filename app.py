@@ -320,7 +320,7 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
             if len(recurring_df) > 0:
                 st.markdown(f"**{len(recurring_df)} recurring expenses identified** (appearing in ≥2 months)")
                 
-                recurring_summary = recurring_df.groupby("category")["avg_amount"].sum().sort_values(ascending=False)
+                recurring_summary = recurring_df.groupby("category")["amount"].sum().sort_values(ascending=False)
                 st.dataframe(
                     recurring_summary.rename("Total (₺)"),
                     use_container_width=True
