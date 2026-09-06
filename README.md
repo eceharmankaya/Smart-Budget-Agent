@@ -24,7 +24,12 @@ The system will:
 
 ## Inputs
 
-SmartBudget will use the following information:
+SmartBudget uses transaction history plus the following user choices:
+
+- monthly income and fixed housing cost
+- protected categories, such as housing or health insurance
+- a target percentage reduction from current average spending
+- optional transaction CSV with `category`, `description`, `amount`, and `date` columns
 
 
 ## Quickstart — run locally
@@ -109,9 +114,11 @@ After running the scripts you will find outputs under `data/` and `output/`:
 - **Category bounds:** enforces realistic min/max spend per category:
   - Essential (Groceries, Utilities): minimum 70-75% of current
   - Protected (Beauty, Housing, Insurance): fixed at current level
-  - Discretionary (Coffee, Travel, Shopping): can reduce to 5-50% of current
+  - Discretionary categories retain a minimum allowance; transportation, delivery, and other spending cannot be reduced to zero
 - **Protected categories:** specify which categories to keep at current level (e.g., `--protected-categories Beauty`)
 - **Savings targets:** achieve desired savings by % or explicit budget
+
+> The optimizer may report an infeasible result when a target conflicts with protected or minimum category amounts. In that case, it reports the minimum feasible monthly budget instead of producing an unrealistic plan.
 
 ## Example: 60k Monthly Income Scenario
 
@@ -128,14 +135,15 @@ After running the scripts you will find outputs under `data/` and `output/`:
 
 **Category-level recommendations:**
 - Housing, Beauty, Insurance, Utilities: kept at current level
-- Groceries: reduced to 75% of current (-2%)
+- Groceries: reduced to 75% of current (-25%)
 - Restaurants, Shopping, Travel: reduced by 45-70%
-- Transportation, Delivery, Other: reduced by 90-100%
+- Transportation, Delivery, Other: reduced within their configured minimum allowances
 
 ## Requirements
 
 See `requirements.txt` (project includes `pandas`, `matplotlib`, `pulp`, etc.).
-SmartBudget will provide:
+
+## Outputs
 
 - Current spending analysis
 - Spending patterns by category

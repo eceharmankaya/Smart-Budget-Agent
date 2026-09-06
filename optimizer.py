@@ -81,13 +81,13 @@ def main():
         "Subscriptions": (1.0, 1.0),     # Fixed
         "AI Tools": (1.0, 1.0),          # Fixed
         "Entertainment": (0.2, 1.0),     # Can cut to 20%
-        "Transportation": (0.1, 1.0),    # Can cut to 10%
+        "Transportation": (0.2, 1.0),    # Preserve a baseline for essential trips
         "Coffee": (0.05, 1.0),           # Can nearly eliminate
-        "Delivery": (0.0, 0.3),          # Can reduce to 30%
+        "Delivery": (0.1, 1.0),          # Preserve occasional convenience spending
         "Shopping": (0.2, 1.0),          # Can cut to 20%
         "Restaurants": (0.3, 1.0),       # Can cut to 30%
         "Travel": (0.2, 1.0),            # Can cut to 20%
-        "Other": (0.0, 0.3),             # Can reduce to 30%
+        "Other": (0.1, 1.0),             # Preserve a small contingency allowance
     }
 
     if args.budget is not None:
