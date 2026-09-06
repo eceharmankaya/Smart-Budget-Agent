@@ -49,10 +49,26 @@ python generate_data.py
 python analysis.py
 ```
 
-4. Run the optimizer skeleton (example budget argument):
+4. Run the optimizer with savings goal (examples):
 
 ```bash
-python optimizer.py --budget 200000
+# 20% savings target with category bounds
+python optimizer.py --savings-pct 0.20 --protected-categories Beauty
+
+# 30% savings target
+python optimizer.py --savings-pct 0.30
+
+# Explicit monthly budget (4000 TL)
+python optimizer.py --budget 40000
+
+# Protect multiple categories
+python optimizer.py --savings-pct 0.25 --protected-categories "Beauty,Groceries,Coffee"
+```
+
+5. View the optimized budget recommendation:
+
+```bash
+python compare_budgets.py
 ```
 
 ## Generated files
@@ -68,11 +84,35 @@ After running the scripts you will find outputs under `data/` and `output/`:
 - `data/optimizer_solution.csv` — optimizer output (recommended spends)
 - `output/*.png` — saved plots (monthly and category totals)
 
-## Notes
+## Optimizer Features
 
-- Recurring detection heuristic: a `description` is considered recurring when it appears in every month and the coefficient of variation (std/mean) of amounts is small (default cv < 0.2). Adjust thresholds in `analysis.py` as needed.
-- The provided `optimizer.py` is a starter LP model (uses PuLP). Customize objective and constraints to match your personal budgeting goals.
-- If plots are not generated, ensure you run scripts with the same Python interpreter where `matplotlib` is installed (use the virtualenv `.venv`).
+- **Recurring detection:** automatically identifies fixed monthly expenses (rent, insurance, subscriptions)
+- **L1 minimization:** minimizes total deviation from current spending averages (preserves category balance)
+- **Category bounds:** enforces realistic min/max spend per category:
+  - Essential (Groceries, Utilities): minimum 70-75% of current
+  - Protected (Beauty, Housing, Insurance): fixed at current level
+  - Discretionary (Coffee, Travel, Shopping): can reduce to 5-50% of current
+- **Protected categories:** specify which categories to keep at current level (e.g., `--protected-categories Beauty`)
+- **Savings targets:** achieve desired savings by % or explicit budget
+
+## Example: 60k Monthly Income Scenario
+
+**Input:**
+- Monthly income: 60,000 TL
+- Housing (rent): 30,000 TL
+- Beauty: 3,000 TL (protected)
+- Savings goal: 20%
+
+**Output:**
+- Current spending: ~57,000 TL
+- Recommended budget: ~45,500 TL
+- **Monthly savings: 11,500 TL**
+
+**Category-level recommendations:**
+- Housing, Beauty, Insurance, Utilities: kept at current level
+- Groceries: reduced to 75% of current (-2%)
+- Restaurants, Shopping, Travel: reduced by 45-70%
+- Transportation, Delivery, Other: reduced by 90-100%
 
 ## Requirements
 
