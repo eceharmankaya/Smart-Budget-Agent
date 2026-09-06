@@ -6,6 +6,7 @@ This is a starter template — tweak objective/constraints to match your goals.
 """
 import sys
 import re
+from pathlib import Path
 import pandas as pd
 
 try:
@@ -16,12 +17,11 @@ except ImportError:
 
 
 def main():
-    df = pd.read_csv("data/optimizer_input.csv")
-    df = df.set_index("category")
-
     # CLI: support either explicit budget or savings percentage (defaults to 10%)
     import argparse
     p = argparse.ArgumentParser(description="Optimizer: minimize deviation from current averages while meeting savings target")
+    p.add_argument("--input", type=Path, default=Path("data/optimizer_input.csv"), help="Optimizer input CSV")
+    p.add_argument("--output", type=Path, default=Path("data/optimizer_solution.csv"), help="Where to save the solution CSV")
     p.add_argument("--budget", type=float, default=None, help="Monthly budget to respect (overrides --savings-pct)")
     p.add_argument("--savings-pct", type=float, default=0.10, help="Target savings as fraction of current avg total (default 0.10)")
     p.add_argument("--protected-categories", type=str, default="", help="Comma-separated categories to keep at avg_monthly (e.g., 'Beauty,Coffee')")
@@ -34,6 +34,16 @@ def main():
         help="Override a category's current monthly amount (may be supplied more than once)",
     )
     args = p.parse_args()
+
+    try:
+        df = pd.read_csv(args.input).set_index("category")
+    except FileNotFoundError:
+        p.error(f"Input file not found: {args.input}")
+    except (ValueError, KeyError):
+        p.error("Input CSV must contain a 'category' column")
+
+    if "avg_monthly" not in df.columns or "fixed_amount" not in df.columns:
+        p.error("Input CSV must contain 'avg_monthly' and 'fixed_amount' columns")
 
     if not 0 <= args.savings_pct < 1:
         p.error("--savings-pct must be between 0 (inclusive) and 1 (exclusive)")
@@ -156,9 +166,9 @@ def main():
         })
 
     out = pd.DataFrame(results)
-    out_path = "data/optimizer_solution.csv"
-    out.to_csv(out_path, index=False)
-    print(f"Saved optimizer solution to {out_path}")
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    out.to_csv(args.output, index=False)
+    print(f"Saved optimizer solution to {args.output}")
 
 
 if __name__ == "__main__":

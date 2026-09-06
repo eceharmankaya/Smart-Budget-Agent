@@ -9,6 +9,33 @@ import numpy as np
 
 PROJECT_DIR = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_DIR / "data"
+REQUIRED_EXPENSE_COLUMNS = {"category", "description", "amount", "date"}
+
+
+def import_expenses(uploaded_file):
+    """Validate an uploaded transaction CSV and regenerate analysis files."""
+    try:
+        uploaded_df = pd.read_csv(uploaded_file)
+    except (UnicodeDecodeError, pd.errors.ParserError) as error:
+        return False, f"CSV could not be read: {error}"
+
+    missing_columns = REQUIRED_EXPENSE_COLUMNS - set(uploaded_df.columns)
+    if missing_columns:
+        return False, f"Missing required columns: {', '.join(sorted(missing_columns))}"
+    if uploaded_df.empty:
+        return False, "The uploaded CSV has no transactions."
+    if (pd.to_numeric(uploaded_df["amount"], errors="coerce") < 0).any() or pd.to_numeric(uploaded_df["amount"], errors="coerce").isna().any():
+        return False, "The 'amount' column must contain non-negative numbers."
+    if pd.to_datetime(uploaded_df["date"], errors="coerce").isna().any():
+        return False, "The 'date' column must contain valid dates."
+
+    uploaded_df.to_csv(DATA_DIR / "expenses.csv", index=False)
+    result = subprocess.run(
+        [sys.executable, "analysis.py"], capture_output=True, text=True, cwd=PROJECT_DIR
+    )
+    if result.returncode != 0:
+        return False, result.stderr or result.stdout or "Analysis failed."
+    return True, f"Imported {len(uploaded_df):,} transactions and refreshed the analysis."
 
 # Page config
 st.set_page_config(
@@ -50,6 +77,22 @@ st.markdown("*Personalized AI-powered budget optimization*")
 st.sidebar.header("📊 Your Financial Profile")
 st.sidebar.markdown("---")
 
+uploaded_file = st.sidebar.file_uploader(
+    "Transaction CSV (optional)", type="csv",
+    help="Required columns: category, description, amount, date. Uploading replaces the demo transaction data."
+)
+if uploaded_file is not None:
+    file_key = f"{uploaded_file.name}:{uploaded_file.size}"
+    if st.session_state.get("imported_file_key") != file_key:
+        with st.sidebar.spinner("Importing transactions..."):
+            imported, message = import_expenses(uploaded_file)
+        if imported:
+            st.session_state.imported_file_key = file_key
+            st.session_state.optimization_done = False
+            st.sidebar.success(message)
+        else:
+            st.sidebar.error(message)
+
 income = st.sidebar.number_input(
     "Monthly Income (₺)",
     min_value=20000,
@@ -81,12 +124,12 @@ st.sidebar.markdown("---")
 st.sidebar.header("🎯 Optimization Settings")
 
 savings_pct = st.sidebar.slider(
-    "Savings Target (%)",
+    "Spending Reduction Target (%)",
     min_value=5,
     max_value=50,
     value=20,
     step=5,
-    help="What % of income do you want to save?"
+    help="The percentage to reduce from your current average monthly spending."
 )
 
 protected_categories = st.sidebar.multiselect(
@@ -160,6 +203,7 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
         savings_pct_actual = (savings / current_total) * 100
         annual_savings = savings * 12
         monthly_after_savings = income - recommended_total
+        income_target_savings = income * (savings_pct / 100)
         
         # TAB 1: OVERVIEW
         with tab1:
@@ -194,6 +238,11 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
                     f"{savings_pct_actual:.1f}%",
                     delta_color="inverse"
                 )
+
+            if monthly_after_savings < 0:
+                st.warning(f"Your optimized budget is ₺{-monthly_after_savings:,.0f} above your monthly income. Consider a higher reduction target or lower fixed costs.")
+            elif savings < income_target_savings:
+                st.info(f"This plan reduces spending by ₺{savings:,.0f}/month. Your {savings_pct}% income-based savings goal would be ₺{income_target_savings:,.0f}/month.")
             
             st.markdown("---")
             

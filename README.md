@@ -71,6 +71,24 @@ python optimizer.py --savings-pct 0.25 --protected-categories "Beauty,Groceries,
 python compare_budgets.py
 ```
 
+Or start the interactive app:
+
+```bash
+streamlit run app.py
+```
+
+The app can import a transaction CSV. It must include `category`, `description`,
+`amount`, and `date` columns. An import replaces the demo data in `data/expenses.csv`
+and recreates the analysis files.
+
+## Tests
+
+Run the optimizer regression tests with:
+
+```bash
+python -m unittest test_optimizer.py
+```
+
 ## Generated files
 
 After running the scripts you will find outputs under `data/` and `output/`:
