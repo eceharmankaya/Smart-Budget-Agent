@@ -290,18 +290,24 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
                         ignore_index=True,
                     )
                 chart_data = chart_data.sort_values(amount_column, ascending=False)
+                legend_labels = [
+                    f"{category} — ₺{amount:,.0f} ({amount / total:.1%})"
+                    for category, amount in zip(chart_data["category"], chart_data[amount_column])
+                ]
 
                 wedges, _, _ = ax.pie(
                     chart_data[amount_column],
-                    autopct=lambda pct: f"{pct:.1f}%" if pct >= 4 else "",
+                    # Small original categories have already been grouped above,
+                    # so every visible slice can safely show its percentage.
+                    autopct=lambda pct: f"{pct:.1f}%",
                     startangle=90,
                     pctdistance=0.7,
-                    textprops={"fontsize": 9},
+                    textprops={"fontsize": 8},
                 )
                 ax.set_title(title, fontsize=12, fontweight="bold")
                 ax.legend(
                     wedges,
-                    chart_data["category"],
+                    legend_labels,
                     loc="upper center",
                     bbox_to_anchor=(0.5, -0.08),
                     ncol=2,
