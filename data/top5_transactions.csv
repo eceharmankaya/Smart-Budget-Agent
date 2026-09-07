@@ -1,6 +1,6 @@
 category,description,amount,date,desc_norm,year_month
-Housing,Rent,12000,2026-09-20,rent,2026-09
-Housing,Rent,12000,2026-10-17,rent,2026-10
-Housing,Rent,12000,2026-11-06,rent,2026-11
-Travel,Flight,4322,2026-11-06,flight,2026-11
-Travel,Train,3750,2026-10-05,train,2026-10
+Housing,Rent,12000,2026-09-24,rent,2026-09
+Housing,Rent,12000,2026-10-24,rent,2026-10
+Housing,Rent,12000,2026-11-22,rent,2026-11
+Travel,Hotel,4944,2026-10-09,hotel,2026-10
+Travel,Train,4802,2026-09-01,train,2026-09

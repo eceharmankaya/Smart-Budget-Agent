@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Simple optimizer skeleton for SmartBudget.
+"""Create a constrained monthly budget recommendation with PuLP.
 
-Reads `data/optimizer_input.csv` and builds a minimal LP using PuLP.
-This is a starter template — tweak objective/constraints to match your goals.
+The model minimizes the largest proportional reduction from historical monthly
+category averages while respecting a user-selected budget and spending floors.
 """
 import sys
 import re
@@ -77,17 +77,17 @@ def main():
         "Health Insurance": (1.0, 1.0),  # Fixed
         "Housing": (1.0, 1.0),           # Fixed
         "Beauty": (1.0, 1.0),            # Fixed (protected)
-        "Gym": (0.3, 1.0),               # Can cut to 30%
+        "Gym": (0.5, 1.0),               # Preserve an affordable wellness baseline
         "Subscriptions": (1.0, 1.0),     # Fixed
         "AI Tools": (1.0, 1.0),          # Fixed
-        "Entertainment": (0.2, 1.0),     # Can cut to 20%
-        "Transportation": (0.2, 1.0),    # Preserve a baseline for essential trips
-        "Coffee": (0.05, 1.0),           # Can nearly eliminate
-        "Delivery": (0.1, 1.0),          # Preserve occasional convenience spending
+        "Entertainment": (0.25, 1.0),    # Retain low-cost leisure allowance
+        "Transportation": (0.5, 1.0),    # Preserve a baseline for essential trips
+        "Coffee": (0.2, 1.0),            # Retain an occasional discretionary allowance
+        "Delivery": (0.3, 1.0),          # Preserve occasional convenience spending
         "Shopping": (0.2, 1.0),          # Can cut to 20%
         "Restaurants": (0.3, 1.0),       # Can cut to 30%
-        "Travel": (0.2, 1.0),            # Can cut to 20%
-        "Other": (0.1, 1.0),             # Preserve a small contingency allowance
+        "Travel": (0.3, 1.0),            # Retain a modest travel allowance
+        "Other": (0.3, 1.0),             # Preserve a contingency allowance
     }
 
     if args.budget is not None:
@@ -95,12 +95,15 @@ def main():
     else:
         budget = total_avg * (1.0 - float(args.savings_pct))
 
-    # Build LP: minimize sum of absolute deviations from avg_monthly (L1)
-    prob = pl.LpProblem("smartbudget_min_deviation", pl.LpMinimize)
+    # Build LP: minimize the largest proportional reduction across categories.
+    # A plain L1 objective is indifferent between many different allocations of
+    # the same total cut, which can lead to arbitrary, concentrated reductions.
+    prob = pl.LpProblem("smartbudget_fair_reduction", pl.LpMinimize)
 
     spend_vars = {}
     dev_plus = {}
     dev_minus = {}
+    max_reduction = pl.LpVariable("max_proportional_reduction", lowBound=0, cat="Continuous")
     for cat in df.index:
         safe_name = re.sub(r"[^0-9a-zA-Z_]", "_", cat)
         avg = float(df.loc[cat, "avg_monthly"]) if "avg_monthly" in df.columns else 0.0
@@ -111,7 +114,9 @@ def main():
             fixed = avg
 
         # Apply category bounds (min/max as fraction of avg)
-        min_frac, max_frac = category_bounds.get(cat, (0.0, 2.0))  # default: 0 to 2x
+        # New categories should not be reduced to zero simply because they are
+        # not yet listed above.  Their 20% floor is a conservative default.
+        min_frac, max_frac = category_bounds.get(cat, (0.2, 1.0))
         lb_bound = avg * min_frac
         ub_bound = avg * max_frac
         
@@ -130,8 +135,11 @@ def main():
 
         prob += var == avg + dp - dm, f"dev_balance_{safe_name}"
 
-    # Objective: minimize sum of absolute deviations
-    prob += pl.lpSum([dev_plus[c] + dev_minus[c] for c in df.index]), "Minimize_total_deviation"
+        if avg > 0:
+            prob += avg - var <= max_reduction * avg, f"fair_reduction_{safe_name}"
+
+    # Objective: distribute unavoidable cuts as evenly as allowed by bounds.
+    prob += max_reduction, "Minimize_largest_proportional_reduction"
 
     # Budget constraint
     prob += pl.lpSum([spend_vars[c] for c in spend_vars]) <= budget, "BudgetConstraint"

@@ -1,43 +1,42 @@
 description,desc_norm,months_count,avg_amount,std_amount,cv,is_recurring,category
 AI Subscription,ai subscription,3,1500.0,0.0,0.0,True,AI Tools
-Beauty Treatment,beauty treatment,1,989.0,,,False,Beauty
-Brunch,brunch,3,1172.2857142857142,429.6788390902032,0.36653081569966156,False,Restaurants
-Bus,bus,3,514.5,226.62364787854284,0.4404735624461474,False,Transportation
-Cinema,cinema,1,681.0,,,False,Entertainment
-Clothing,clothing,2,1384.0,997.020561473032,0.7203905790990116,False,Shopping
+Beauty Treatment,beauty treatment,1,2021.0,,,False,Beauty
+Brunch,brunch,2,1524.25,47.96092159247985,0.03146525936852869,True,Restaurants
+Bus,bus,3,443.5,242.7737629975694,0.547404200670957,False,Transportation
+Cinema,cinema,3,890.3333333333334,630.6998757993641,0.7083862326462345,False,Entertainment
+Clothing,clothing,2,2269.0,943.2804461028544,0.4157251855896229,False,Shopping
 Cloud Storage,cloud storage,3,150.0,0.0,0.0,True,Subscriptions
-Coffee Shop,coffee shop,3,274.1666666666667,88.58987903065827,0.3231241788352277,False,Coffee
-Concert,concert,2,1088.5,91.21677477306463,0.08380043617185542,True,Entertainment
-Cosmetics,cosmetics,2,1462.25,819.1969136497851,0.5602304076934759,False,Shopping
-Dinner Out,dinner out,3,949.0,567.8274385761928,0.598342927899044,False,Restaurants
-Electricity,electricity,2,1118.0,128.69343417595164,0.11511040623967052,True,Utilities
-Electronics,electronics,2,1126.5,187.3832970144351,0.16634114248951185,True,Shopping
-EspressoLab,espressolab,3,283.4375,67.05815262392288,0.23658885159487675,True,Coffee
-Event,event,3,1146.75,243.6354859210784,0.21245736727366768,True,Entertainment
-Fast Food,fast food,2,963.6666666666666,517.2710443600466,0.5367738267312833,False,Restaurants
-Flight,flight,2,2921.5,1980.6060941035196,0.677941500634441,False,Travel
-Food Delivery,food delivery,3,619.6,246.9682165785711,0.39859298995895914,False,Delivery
-Fuel,fuel,3,342.3636363636364,219.66395823041736,0.6416100744913943,False,Transportation
-Grocery Delivery,grocery delivery,3,538.0,253.5632728400021,0.4713071985873645,False,Delivery
-Grocery Store,grocery store,3,808.875,348.5395806586596,0.43089424281707256,False,Groceries
+Coffee Shop,coffee shop,3,263.3636363636364,75.35950202499049,0.2861423963668952,False,Coffee
+Concert,concert,2,1120.6666666666667,495.43348023052835,0.4420881739118337,False,Entertainment
+Cosmetics,cosmetics,2,2190.0,96.16652224137046,0.04391165399149336,True,Shopping
+Dinner Out,dinner out,3,894.6666666666666,493.9973009372959,0.5521579369641907,False,Restaurants
+Electricity,electricity,2,1101.0,641.98442348705,0.5830921194251135,False,Utilities
+Electronics,electronics,3,2198.0,737.759784753818,0.33565049351857057,False,Shopping
+EspressoLab,espressolab,3,214.9,82.82706213685368,0.3854214152482721,False,Coffee
+Event,event,1,518.0,,,False,Entertainment
+Fast Food,fast food,2,1112.4,556.9060064319651,0.5006346695720649,False,Restaurants
+Flight,flight,1,1400.0,,,False,Travel
+Food Delivery,food delivery,3,695.1111111111111,296.3724196194901,0.4263669719589851,False,Delivery
+Fuel,fuel,3,321.57142857142856,225.83306097330265,0.7022796209742864,False,Transportation
+Grocery Delivery,grocery delivery,3,656.3333333333334,59.65176722724428,0.09088638988406948,True,Delivery
+Grocery Store,grocery store,3,916.75,303.9918936889131,0.33159737517198046,False,Groceries
 Gym Membership,gym membership,3,1500.0,0.0,0.0,True,Gym
+Hair Salon,hair salon,2,1230.5,444.7701653663384,0.36145482760368824,False,Beauty
 Health Insurance Payment,health insurance payment,3,1500.0,0.0,0.0,True,Health Insurance
-Internet,internet,3,904.25,215.09280942576083,0.23786874141637915,True,Utilities
-Local Market,local market,2,908.3333333333334,181.63663360309965,0.19996693607680696,True,Groceries
-Metro,metro,3,438.6363636363636,274.06760944236834,0.6248173479515133,False,Transportation
-Miscellaneous Expense,miscellaneous expense,3,867.5,275.21682361367374,0.31725282260942217,False,Other
-Mobile Phone,mobile phone,3,1171.0,500.28058793707623,0.42722509644498396,False,Utilities
-Nail Salon,nail salon,1,1585.0,,,False,Beauty
+Hotel,hotel,3,3356.3333333333335,2232.226765660992,0.6650789847038411,False,Travel
+Internet,internet,3,1179.0,409.8495658978629,0.3476247378268557,False,Utilities
+Local Market,local market,3,654.2857142857143,294.45866392739197,0.45004599290212743,False,Groceries
+Metro,metro,3,313.4,301.26948069792934,0.9612938120546566,False,Transportation
+Miscellaneous Expense,miscellaneous expense,3,638.5,157.117471975589,0.24607278304712454,True,Other
+Mobile Phone,mobile phone,1,933.0,695.7930726875628,0.7457589203510856,False,Utilities
 Netflix,netflix,3,250.0,0.0,0.0,True,Subscriptions
-Night Out,night out,2,646.5,241.1234123846127,0.3729673818787513,False,Entertainment
-Online Shopping,online shopping,2,2068.5,472.50432096789694,0.22842848487691417,True,Shopping
+Night Out,night out,2,1133.5,74.24621202458749,0.0655017309436149,True,Entertainment
+Online Shopping,online shopping,2,2667.3333333333335,807.5997358427833,0.3027742073891964,False,Shopping
 Rent,rent,3,12000.0,0.0,0.0,True,Housing
-Restaurant,restaurant,2,917.25,222.61832059978056,0.24270190307961903,True,Restaurants
-Skincare,skincare,1,802.0,,,False,Beauty
+Restaurant,restaurant,3,999.6666666666666,445.7212881012827,0.4458699114050844,False,Restaurants
 Spotify,spotify,3,100.0,0.0,0.0,True,Subscriptions
-Starbucks,starbucks,3,266.0,92.92393202430223,0.3493380903169257,False,Coffee
-Supermarket,supermarket,3,811.9,347.8024503140316,0.42838089704893656,False,Groceries
-Taxi,taxi,2,294.5,132.09718644493026,0.44854732239365114,False,Transportation
-Train,train,1,3750.0,,,False,Travel
-Travel Expense,travel expense,2,2969.3333333333335,246.57926379428858,0.08304196131374783,True,Travel
-Water,water,2,1533.5,362.74577874869885,0.23654762226847006,True,Utilities
+Starbucks,starbucks,3,222.77777777777777,69.78140471819441,0.31323323813653353,False,Coffee
+Supermarket,supermarket,3,960.6666666666666,280.71426753907616,0.29220777328842074,False,Groceries
+Taxi,taxi,3,334.90909090909093,268.1512463314144,0.8006687594043318,False,Transportation
+Train,train,2,4705.5,136.47160876900367,0.029002573322495732,True,Travel
+Water,water,3,637.3333333333334,178.3601225984478,0.27985374884693687,False,Utilities

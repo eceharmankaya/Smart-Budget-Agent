@@ -1,6 +1,12 @@
 from datetime import date, timedelta
+from pathlib import Path
 import pandas as pd
 import random
+
+RANDOM_SEED = 42
+PROJECT_DIR = Path(__file__).resolve().parent
+DATA_PATH = PROJECT_DIR / "data" / "expenses.csv"
+random.seed(RANDOM_SEED)
 
 categories = [
     "Housing",
@@ -129,5 +135,6 @@ for transaction in transactions[:10]:
 expenses_df = pd.DataFrame(transactions)
 print(expenses_df.head())
 
-expenses_df.to_csv("data/expenses.csv", index=False)
-print("Data saved to data/expenses.csv")
+DATA_PATH.parent.mkdir(exist_ok=True)
+expenses_df.to_csv(DATA_PATH, index=False)
+print(f"Data saved to {DATA_PATH}")

@@ -39,6 +39,26 @@ class OptimizerTests(unittest.TestCase):
         self.assertEqual(housing["avg_monthly"], 30000)
         self.assertEqual(housing["recommended_spend"], 30000)
 
+    def test_zero_savings_preserves_current_budget(self):
+        source = pd.read_csv(SOURCE_INPUT).sort_values("category").reset_index(drop=True)
+        result, solution = self.run_optimizer("--savings-pct", "0")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        solution = solution.sort_values("category").reset_index(drop=True)
+        pd.testing.assert_series_equal(
+            solution["recommended_spend"].round(2),
+            source["avg_monthly"].round(2),
+            check_names=False,
+        )
+
+    def test_protected_category_remains_unchanged(self):
+        source = pd.read_csv(SOURCE_INPUT).set_index("category")
+        result, solution = self.run_optimizer(
+            "--savings-pct", "0.10", "--protected-categories", "Gym"
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        gym = solution.set_index("category").loc["Gym"]
+        self.assertEqual(gym["recommended_spend"], source.loc["Gym", "avg_monthly"])
+
     def test_impossible_budget_returns_an_error(self):
         result, solution = self.run_optimizer("--budget", "1")
         self.assertEqual(result.returncode, 2)

@@ -19,7 +19,7 @@ total_recommended = sol_df["recommended_spend"].sum()
 total_savings = total_current - total_recommended
 savings_pct = total_savings / total_current * 100
 
-print("=== OPTIMIZED BUDGET RECOMMENDATION (25% Savings Target) ===\n")
+print(f"=== OPTIMIZED BUDGET RECOMMENDATION ({savings_pct:.1f}% Reduction) ===\n")
 print(comparison.to_string())
 print("\n" + "="*70)
 print(f"Total Current Avg:       {total_current:>12,.0f} TL")

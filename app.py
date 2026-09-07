@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
 import subprocess
-import os
 import sys
 from pathlib import Path
 import matplotlib.pyplot as plt
-import numpy as np
 
 PROJECT_DIR = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_DIR / "data"
@@ -71,7 +69,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("💰 Smart Budget Agent")
-st.markdown("*Personalized AI-powered budget optimization*")
+st.markdown("*Personalized, constraint-aware budget optimization*")
 
 # Sidebar for user inputs
 st.sidebar.header("📊 Your Financial Profile")
@@ -142,7 +140,7 @@ protected_categories = st.sidebar.multiselect(
 st.sidebar.markdown("---")
 
 # Main area - Tabs
-tab1, tab2, tab3, tab4 = st.tabs(["📈 Overview", "📊 Analysis", "💡 AI Insights", "📋 90-Day Plan"])
+tab1, tab2, tab3, tab4 = st.tabs(["📈 Overview", "📊 Analysis", "💡 Recommendations", "📋 90-Day Plan"])
 
 # Optimization button
 if st.sidebar.button("🚀 Optimize Now!", use_container_width=True, type="primary"):
@@ -364,9 +362,9 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
             
             st.pyplot(fig)
         
-        # TAB 3: AI INSIGHTS
+        # TAB 3: RECOMMENDATIONS
         with tab3:
-            st.subheader("🤖 AI Agent Analysis")
+            st.subheader("💡 Personalized Recommendations")
             
             col1, col2 = st.columns([2, 1])
             
@@ -548,7 +546,7 @@ else:
         Set your income and fixed costs
         
         **Step 2: Optimize**
-        AI finds optimal spending plan
+        Linear programming finds a feasible spending plan
         
         **Step 3: Insights**
         Get personalized tips & timeline
@@ -559,7 +557,7 @@ else:
         ### 🧠 Advanced Features
         
         ✅ Linear Programming optimization
-        ✅ AI-powered recommendations
+        ✅ Constraint-based recommendations
         ✅ Recurring expense detection
         ✅ 90-day implementation plan
         ✅ Multi-scenario testing
