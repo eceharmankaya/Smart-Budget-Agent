@@ -273,17 +273,47 @@ if "optimization_done" in st.session_state and st.session_state.optimization_don
             st.markdown("---")
             st.subheader("📊 Spending Breakdown")
             
-            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
-            
-            # Before pie chart
-            ax1.pie(input_df["avg_monthly"], labels=input_df["category"], autopct='%1.1f%%', startangle=90)
-            ax1.set_title("Current Spending Distribution", fontsize=12, fontweight='bold')
-            
-            # After pie chart
-            ax2.pie(solution_df["recommended_spend"], labels=solution_df["category"], autopct='%1.1f%%', startangle=90)
-            ax2.set_title("Optimized Spending Distribution", fontsize=12, fontweight='bold')
-            
+            def draw_spending_pie(ax, frame, amount_column, title):
+                """Draw a readable pie chart, grouping tiny slices into Other."""
+                chart_data = frame[["category", amount_column]].copy()
+                chart_data = chart_data[chart_data[amount_column] > 0]
+                total = chart_data[amount_column].sum()
+                small_slice = chart_data[amount_column] / total < 0.03
+
+                # Tiny categories make a pie chart unreadable.  Keep their total,
+                # but present it as one slice and list every resulting slice below.
+                small_total = chart_data.loc[small_slice, amount_column].sum()
+                chart_data = chart_data.loc[~small_slice]
+                if small_total > 0:
+                    chart_data = pd.concat(
+                        [chart_data, pd.DataFrame([{"category": "Other small expenses", amount_column: small_total}])],
+                        ignore_index=True,
+                    )
+                chart_data = chart_data.sort_values(amount_column, ascending=False)
+
+                wedges, _, _ = ax.pie(
+                    chart_data[amount_column],
+                    autopct=lambda pct: f"{pct:.1f}%" if pct >= 4 else "",
+                    startangle=90,
+                    pctdistance=0.7,
+                    textprops={"fontsize": 9},
+                )
+                ax.set_title(title, fontsize=12, fontweight="bold")
+                ax.legend(
+                    wedges,
+                    chart_data["category"],
+                    loc="upper center",
+                    bbox_to_anchor=(0.5, -0.08),
+                    ncol=2,
+                    fontsize=8,
+                    frameon=False,
+                )
+
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7), constrained_layout=True)
+            draw_spending_pie(ax1, input_df, "avg_monthly", "Current Spending Distribution")
+            draw_spending_pie(ax2, solution_df, "recommended_spend", "Optimized Spending Distribution")
             st.pyplot(fig)
+            plt.close(fig)
         
         # TAB 2: DETAILED ANALYSIS
         with tab2:
