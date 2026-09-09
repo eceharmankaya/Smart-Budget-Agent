@@ -2,8 +2,6 @@
 
 SmartBudget is a personal-finance portfolio project that analyzes transaction history and uses linear programming to recommend a feasible monthly budget. It combines Pandas-based analysis, recurring-expense detection, PuLP constraints, and an interactive Streamlit dashboard.
 
-> **Note:** The repository contains a deterministic `BudgetAgent` reporting module. It does not currently use an LLM or external tool-calling API; the dashboard's recommendations are derived from the analysis and optimization outputs.
-
 ## Overview
 
 A spending total alone does not show which expenses can realistically change. SmartBudget turns historical transactions into category-level monthly averages, identifies recurring payments, and finds the closest feasible plan that meets a chosen reduction target. Essential and protected categories retain defined spending floors rather than being reduced to zero to satisfy a target.
