@@ -145,7 +145,3 @@ python -m unittest test_optimizer.py
 - Forecasting from longer transaction histories
 - User-configurable category bounds and multi-objective optimization
 - An optional LLM explanation layer grounded strictly in deterministic tool outputs
-
-## Screenshots for GitHub
-
-Add one or two screenshots under `docs/images/` before linking them here: (1) the completed dashboard overview with current vs. optimized spending, and (2) the category comparison/recommendations view. Use realistic demo data and avoid showing personal transactions.
